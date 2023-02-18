@@ -5,6 +5,13 @@
     <title>Results</title>
 </head>
 <body>
-{{ titles }}
+<h1>Search Results</h1>
+<div>
+    {% for result in results %}
+        <img src="{{ result.poster_url }}">
+        <a>{{ result.name }}</a>
+    {% endfor %}
+</div>
+
 </body>
 </html>

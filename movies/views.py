@@ -26,11 +26,23 @@ def search_results(request):
     r = requests.get('https://api.themoviedb.org/3/search/multi?api_key=' + env('TMDB_API_KEY') + '&page=1&query=' + query)
     print(env('TMDB_API_KEY'))
     data = r.json()
-    titles = []
+    counter = 0
+    results = []
     for key in data['results']:
-        try:
-            titles.append(key['title'])
-        except:
-            titles.append('No title')
+        if counter == 5:
+            break
+        result = {}
+        result['type'] = key['media_type']
+        if key['media_type'] == 'movie':
+            result['name'] = key['title']
+        else:
+            result['name'] = key['name']
+        if key['media_type'] == 'person':
+            result['poster_url'] = 'https://image.tmdb.org/t/p/w300' + key['profile_path']
+        else:
+            result['poster_url'] = 'https://image.tmdb.org/t/p/w300' + key['poster_path']
+        # print("")
+        results.append(result)
+        counter += 1
 
-    return render(request, 'movies/results.html', {'titles': titles})
+    return render(request, 'movies/results.html', {'results': results})
